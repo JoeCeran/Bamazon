@@ -40,24 +40,29 @@ function start() {
         name: "ID",
         type: "input",
         message: "What is the ID of the item you'd like to buy?(Select by ID#)",
+        validate: function validateID(name){
+          return name !== "";
+        }
         },
         {
         name: "Units",
         type: "input",
         message: "How many would you like to buy?",
+        validate: function validateID(name){
+          return name !== "";
+        }
         }
         ])
       .then(function(answer) {
         i = answer.ID - 1;
         if (answer.Units <= results[i].stock_quantity) {
           newQ = results[i].stock_quantity - answer.Units;
-          console.log("Enough quantity!");
           connection.query("UPDATE products SET stock_quantity='" + newQ + "' WHERE item_id='" + answer.ID + "'")
           inquirer
           .prompt({
             name: "choice",
             type: "list",
-            message: "Purchased item, do you wish to continue?",
+            message: "Purchased item/s. Your total is " + (results[i].price * answer.Units) + ", do you wish to continue?",
             choices: ["Yes","No"]
             }).then(function(answer) {
             if (answer.choice == "Yes"){
